@@ -1,0 +1,77 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 520" font-family="-apple-system, 'PingFang SC', 'Microsoft YaHei', sans-serif">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#16162a"/>
+      <stop offset="1" stop-color="#241733"/>
+    </linearGradient>
+    <linearGradient id="merc" x1="0" y1="1" x2="0" y2="0">
+      <stop offset="0" stop-color="#ff5252"/>
+      <stop offset="1" stop-color="#ff8a3d"/>
+    </linearGradient>
+    <linearGradient id="card" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#2a2a44"/>
+      <stop offset="1" stop-color="#1f1f36"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="960" height="520" fill="url(#bg)"/>
+  <rect x="0" y="0" width="960" height="64" fill="#10101e"/>
+  <text x="32" y="42" fill="#ff6b6b" font-size="26" font-weight="700">记仇本</text>
+  <text x="140" y="42" fill="#9aa0b5" font-size="15">本地存储 · 温度计记仇 · 人淡如菊</text>
+
+  <!-- 卡片1 记仇 -->
+  <g>
+    <rect x="32" y="96" width="280" height="392" rx="14" fill="url(#card)" stroke="#3a3a5c"/>
+    <text x="52" y="132" fill="#ffd166" font-size="18" font-weight="700">记仇</text>
+    <rect x="52" y="148" width="240" height="34" rx="8" fill="#12121f" stroke="#3a3a5c"/>
+    <text x="64" y="170" fill="#6b7194" font-size="13">输入名字…</text>
+    <rect x="52" y="196" width="240" height="60" rx="8" fill="#12121f" stroke="#3a3a5c"/>
+    <text x="64" y="218" fill="#6b7194" font-size="12">备忘录：那天的仇</text>
+    <text x="64" y="240" fill="#6b7194" font-size="12">为什么记这一笔</text>
+    <!-- 温度计 -->
+    <rect x="300" y="276" width="22" height="170" rx="11" fill="#12121f" stroke="#3a3a5c"/>
+    <rect x="304" y="300" width="14" height="140" rx="7" fill="url(#merc)"/>
+    <circle cx="311" cy="452" r="22" fill="url(#merc)"/>
+    <text x="244" y="298" fill="#ff8a3d" font-size="13" font-weight="700">68</text>
+    <text x="344" y="300" fill="#9aa0b5" font-size="12">仇恨值</text>
+    <rect x="52" y="452" width="120" height="28" rx="14" fill="#ff5252"/>
+    <text x="112" y="471" fill="#fff" font-size="13" font-weight="700" text-anchor="middle">提交记仇</text>
+  </g>
+
+  <!-- 卡片2 人淡如菊 -->
+  <g>
+    <rect x="340" y="96" width="280" height="392" rx="14" fill="url(#card)" stroke="#3a3a5c"/>
+    <text x="360" y="132" fill="#a0e7a0" font-size="18" font-weight="700">人淡如菊</text>
+    <text x="360" y="156" fill="#6b7194" font-size="12">垃圾桶 · 释然区</text>
+    <rect x="360" y="172" width="240" height="40" rx="8" fill="#12121f" stroke="#3a3a5c"/>
+    <text x="372" y="197" fill="#cfd3e6" font-size="13">前同事 · 30天未记</text>
+    <rect x="360" y="220" width="240" height="40" rx="8" fill="#12121f" stroke="#3a3a5c"/>
+    <text x="372" y="245" fill="#cfd3e6" font-size="13">邻居 · 已释然</text>
+    <rect x="360" y="290" width="112" height="28" rx="14" fill="#3a5cff"/>
+    <text x="416" y="309" fill="#fff" font-size="12" text-anchor="middle">拉回清算</text>
+    <rect x="488" y="290" width="112" height="28" rx="14" fill="#444"/>
+    <text x="544" y="309" fill="#fff" font-size="12" text-anchor="middle">彻底删除</text>
+    <text x="360" y="360" fill="#6b7194" font-size="12">满级自动「忍无可忍」</text>
+    <text x="360" y="382" fill="#6b7194" font-size="12">一个月不记自动沉底</text>
+    <text x="360" y="404" fill="#6b7194" font-size="12">再触发自动复活 +10</text>
+  </g>
+
+  <!-- 卡片3 线上复仇 -->
+  <g>
+    <rect x="648" y="96" width="280" height="392" rx="14" fill="url(#card)" stroke="#3a3a5c"/>
+    <text x="668" y="132" fill="#ff9ff3" font-size="18" font-weight="700">线上复仇</text>
+    <rect x="668" y="148" width="240" height="34" rx="8" fill="#12121f" stroke="#3a3a5c"/>
+    <text x="680" y="170" fill="#6b7194" font-size="13">输入名字…</text>
+    <rect x="668" y="196" width="240" height="200" rx="8" fill="#12121f" stroke="#3a3a5c"/>
+    <text x="680" y="222" fill="#cfd3e6" font-size="12">某天清晨，XX 出门便</text>
+    <text x="680" y="244" fill="#cfd3e6" font-size="12">一脚踩进狗屎，低头</text>
+    <text x="680" y="266" fill="#cfd3e6" font-size="12">发现刚丢的钱包，</text>
+    <text x="680" y="288" fill="#cfd3e6" font-size="12">抬头天降暴雨却没带伞，</text>
+    <text x="680" y="310" fill="#cfd3e6" font-size="12">手机还滑进马桶……</text>
+    <text x="680" y="348" fill="#9aa0b5" font-size="11">（纯娱乐，无实际伤害）</text>
+    <rect x="668" y="452" width="120" height="28" rx="14" fill="#ff9ff3"/>
+    <text x="728" y="471" fill="#1a1a2e" font-size="13" font-weight="700" text-anchor="middle">生成复仇</text>
+  </g>
+
+  <text x="32" y="508" fill="#4a4f6b" font-size="11">数据仅存本地浏览器 · 零后端 · 零依赖</text>
+</svg>
