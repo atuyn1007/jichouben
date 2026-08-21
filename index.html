@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>记仇本 · 一笔一恨</title>
+<style>
+  :root{
+    --bg:#15131a; --panel:#211d29; --panel2:#2b2635; --line:#3a3445;
+    --red:#e23b3b; --red2:#ff7a3b; --gold:#d4a84b; --ink:#ece6f2; --muted:#9a92a8;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0; font-family:"PingFang SC","Microsoft YaHei",system-ui,sans-serif;
+    background:radial-gradient(1200px 600px at 50% -10%,#2a2333 0%,var(--bg) 60%);
+    color:var(--ink); min-height:100vh;
+  }
+  header{
+    text-align:center; padding:28px 16px 10px;
+  }
+  header h1{
+    margin:0; font-size:34px; letter-spacing:6px;
+    background:linear-gradient(90deg,var(--red),var(--gold));
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+  }
+  header p{margin:6px 0 0;color:var(--muted);font-size:13px;letter-spacing:2px;}
+  .nav{display:flex;justify-content:center;gap:10px;margin:18px 0 6px;flex-wrap:wrap;}
+  .nav-btn{
+    background:var(--panel); color:var(--muted); border:1px solid var(--line);
+    padding:9px 18px; border-radius:30px; cursor:pointer; font-size:14px; transition:.2s;
+  }
+  .nav-btn:hover{color:var(--ink);}
+  .nav-btn.active{background:linear-gradient(90deg,var(--red),var(--red2));color:#fff;border-color:transparent;}
+  .wrap{max-width:880px;margin:0 auto;padding:14px 16px 60px;}
+  .section{display:none;}
+  .section.active{display:block;}
+  .card-panel{
+    background:var(--panel); border:1px solid var(--line); border-radius:16px; padding:18px; margin-bottom:18px;
+  }
+  .field{margin-bottom:14px;}
+  label{display:block;font-size:13px;color:var(--muted);margin-bottom:6px;letter-spacing:1px;}
+  input[type=text],textarea,input[type=number]{
+    width:100%; background:var(--panel2); border:1px solid var(--line); color:var(--ink);
+    border-radius:10px; padding:11px 12px; font-size:15px; font-family:inherit;
+  }
+  textarea{resize:vertical;min-height:64px;}
+  input:focus,textarea:focus{outline:none;border-color:var(--red);}
+  .row{display:flex;gap:14px;align-items:flex-end;}
+  .row .field{flex:1;margin-bottom:0;}
+  .slider-row{display:flex;align-items:center;gap:16px;}
+  .thermo-mini{display:flex;flex-direction:column;align-items:center;width:48px;}
+  .thermo-tube{width:16px;height:120px;background:#1c1822;border:1px solid #4a4358;border-radius:8px 8px 0 0;position:relative;overflow:hidden;}
+  .thermo-fill{position:absolute;bottom:0;left:0;right:0;background:linear-gradient(to top,var(--red2),var(--red));transition:height .35s;}
+  .thermo-bulb{width:36px;height:36px;border-radius:50%;background:radial-gradient(circle at 30% 30%,var(--red2),var(--red));margin-top:-7px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;border:2px solid #4a4358;}
+  .slider-box{flex:1;}
+  input[type=range]{width:100%;accent-color:var(--red);}
+  .slider-val{font-size:26px;font-weight:800;color:var(--red);}
+  .btn{
+    background:linear-gradient(90deg,var(--red),var(--red2));color:#fff;border:none;
+    padding:12px 22px;border-radius:12px;font-size:15px;cursor:pointer;letter-spacing:2px;transition:.15s;
+  }
+  .btn:hover{filter:brightness(1.1);} .btn:active{transform:translateY(1px);}
+  .btn.ghost{background:var(--panel2);color:var(--ink);border:1px solid var(--line);}
+  .btn.small{padding:7px 12px;font-size:13px;border-radius:9px;letter-spacing:1px;}
+  .btn.red{background:var(--red);}
+  .btn.gold{background:var(--gold);color:#1a1620;}
+  #similarBanner{
+    display:none;background:#3a2230;border:1px solid #6a3148;color:#ffd9e4;
+    padding:10px 12px;border-radius:10px;font-size:13px;margin-bottom:14px;line-height:1.5;
+  }
+  .filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px;}
+  .chip{background:var(--panel2);border:1px solid var(--line);color:var(--muted);padding:6px 14px;border-radius:20px;cursor:pointer;font-size:13px;}
+  .chip.active{background:var(--gold);color:#1a1620;border-color:transparent;}
+  .toggle{display:inline-flex;background:var(--panel2);border:1px solid var(--line);border-radius:20px;overflow:hidden;margin-bottom:14px;}
+  .toggle button{background:none;border:none;color:var(--muted);padding:7px 16px;cursor:pointer;font-size:13px;}
+  .toggle button.active{background:var(--red);color:#fff;}
+  .group-title{font-size:14px;color:var(--gold);margin:16px 0 10px;letter-spacing:2px;border-left:3px solid var(--gold);padding-left:8px;}
+  .cards{display:flex;flex-direction:column;gap:12px;}
+  .card{display:flex;gap:16px;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px;}
+  .thermo{display:flex;flex-direction:column;align-items:center;width:54px;flex-shrink:0;}
+  .thermo-tube{width:18px;height:140px;background:#1c1822;border:1px solid #4a4358;border-radius:9px 9px 0 0;position:relative;overflow:hidden;}
+  .thermo-fill{position:absolute;bottom:0;left:0;right:0;background:linear-gradient(to top,var(--red2),var(--red));transition:height .4s;}
+  .thermo-bulb{width:40px;height:40px;border-radius:50%;background:radial-gradient(circle at 30% 30%,var(--red2),var(--red));margin-top:-7px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:13px;border:2px solid #4a4358;}
+  .info{flex:1;min-width:0;}
+  .name{font-size:18px;font-weight:700;display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+  .lvl-badge{font-size:11px;background:#3a2230;color:#ffb3c8;padding:2px 8px;border-radius:10px;border:1px solid #6a3148;}
+  .lvl-badge.max{background:var(--red);color:#fff;border-color:transparent;animation:pulse 1.2s infinite;}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.55}}
+  .meta{font-size:12px;color:var(--muted);margin:4px 0 8px;}
+  .note{font-size:14px;color:#d9d2e3;background:var(--panel2);border-radius:8px;padding:8px 10px;line-height:1.5;word-break:break-word;}
+  .actions{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;}
+  .empty{text-align:center;color:var(--muted);padding:40px 0;font-size:14px;letter-spacing:1px;}
+  .trash-card{display:flex;gap:14px;align-items:center;background:var(--panel);border:1px dashed #4a4358;border-radius:14px;padding:14px;}
+  .trash-card .tname{font-weight:700;font-size:16px;}
+  .trash-card .tmeta{font-size:12px;color:var(--muted);margin-top:4px;}
+  .trash-card .tactions{margin-left:auto;display:flex;gap:8px;}
+  .badge{font-size:11px;background:var(--panel2);color:var(--gold);padding:2px 8px;border-radius:10px;border:1px solid #4a4358;}
+  #revResult{display:none;margin-top:16px;background:#1c1822;border:1px solid #4a4358;border-radius:12px;padding:16px;font-size:15px;line-height:1.7;color:#f0e9f5;white-space:pre-wrap;}
+  #revResult.show{display:block;animation:fade .4s;}
+  @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+  #toast{position:fixed;left:50%;bottom:34px;transform:translateX(-50%);background:#000a;color:#fff;padding:11px 20px;border-radius:30px;font-size:14px;opacity:0;pointer-events:none;transition:.3s;z-index:50;border:1px solid var(--line);}
+  #toast.show{opacity:1;bottom:44px;}
+  .modal-mask{position:fixed;inset:0;background:#000a;display:none;align-items:center;justify-content:center;z-index:60;}
+  .modal-mask.show{display:flex;}
+  .modal{background:var(--panel);border:1px solid var(--red);border-radius:18px;padding:30px;text-align:center;max-width:380px;animation:fade .35s;}
+  .modal h2{margin:0 0 6px;font-size:24px;color:var(--red);letter-spacing:3px;}
+  .modal p{color:var(--muted);font-size:14px;margin:8px 0 20px;line-height:1.6;}
+  .modal .big{font-size:60px;margin-bottom:6px;}
+  .stat{display:flex;gap:10px;justify-content:center;margin:6px 0 16px;flex-wrap:wrap;}
+  .stat .s{background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:8px 14px;font-size:13px;color:var(--muted);}
+  .stat .s b{color:var(--gold);font-size:18px;display:block;}
+</style>
+</head>
+<body>
+<header>
+  <h1>记 仇 本</h1>
+  <p>一笔一恨 · 牢记每一个让你不爽的人</p>
+</header>
+
+<div class="nav">
+  <button class="nav-btn active" data-tab="main">📕 记仇本</button>
+  <button class="nav-btn" data-tab="trash">🥀 人淡如菊</button>
+  <button class="nav-btn" data-tab="revenge">⚔️ 线上复仇</button>
+</div>
+
+<div class="wrap">
+
+  <!-- 记仇本 -->
+  <section class="section active" data-tab="main">
+    <div class="card-panel">
+      <div id="similarBanner"></div>
+      <div class="field">
+        <label>结仇之人（输入名字）</label>
+        <input type="text" id="nameInput" placeholder="例如：王二狗 / 前同事张三 / 抢我奶茶的人">
+      </div>
+      <div class="field">
+        <label>仇恨值（首次 1-100，之后每次 +10）</label>
+        <div class="slider-row">
+          <div class="thermo-mini">
+            <div class="thermo-tube"><div class="thermo-fill" id="previewFill" style="height:30%"></div></div>
+            <div class="thermo-bulb" id="previewBulb">30</div>
+          </div>
+          <div class="slider-box">
+            <input type="range" id="hatredSlider" min="1" max="100" value="30">
+            <div><span class="slider-val" id="sliderVal">30</span> <span style="color:var(--muted);font-size:13px">/ 100</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="field">
+        <label>记这一笔的仇（备忘录）</label>
+        <textarea id="noteInput" placeholder="他干了啥让你记仇？例如：开会当众让我下不来台"></textarea>
+      </div>
+      <div class="field">
+        <label>分类（可自定义，默认按日期归类）</label>
+        <input type="text" id="catInput" placeholder="如：同事 / 亲戚 / 网友 / 留空则归为未分类" list="catList">
+        <datalist id="catList"></datalist>
+      </div>
+      <button class="btn" id="recordBtn" style="width:100%">记 他 一 笔</button>
+    </div>
+
+    <div class="stat" id="statBar"></div>
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:6px;">
+      <div class="toggle">
+        <button id="viewDate" class="active" data-mode="date">按日期</button>
+        <button id="viewCat" data-mode="category">按分类</button>
+      </div>
+      <div class="filters" id="filters" style="margin:0;"></div>
+    </div>
+    <div id="grudgeList"></div>
+  </section>
+
+  <!-- 人淡如菊 -->
+  <section class="section" data-tab="trash">
+    <div class="card-panel">
+      <p style="color:var(--muted);font-size:13px;line-height:1.7;margin:0 0 8px;">
+        「人淡如菊」是释然之桶。手动移入、或 <b>一个月无人记起</b> 的旧怨会自动沉入此处。<br>
+        若某天又想起同一人，再记一笔即将其从桶中拉回，仇恨继续累加。也可在此彻底删除，一笔勾销。
+      </p>
+    </div>
+    <div id="trashList"></div>
+  </section>
+
+  <!-- 线上复仇 -->
+  <section class="section" data-tab="revenge">
+    <div class="card-panel">
+      <div class="field">
+        <label>想整的人（输入名字，替你出气）</label>
+        <input type="text" id="revName" placeholder="例如：王二狗">
+      </div>
+      <button class="btn gold" id="revBtn" style="width:100%">生 成 复 仇 剧 本</button>
+      <div id="revResult"></div>
+    </div>
+  </section>
+
+</div>
+
+<div id="toast"></div>
+
+<div class="modal-mask" id="maxModal">
+  <div class="modal">
+    <div class="big">💢</div>
+    <h2>忍无可忍</h2>
+    <h2 style="margin-top:-4px;color:var(--gold)">无 须 再 忍</h2>
+    <p id="maxText"></p>
+    <button class="btn" id="maxClose">记下了，闭眼</button>
+  </div>
+</div>
+
+<script>
+const STORE_KEY='jichouben_v1';
+let state={grudges:[]};
+let viewMode='date';
+let activeCategory='全部';
+
+const $=s=>document.querySelector(s);
+const $$=s=>Array.from(document.querySelectorAll(s));
+const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,7);
+const nowISO=()=>new Date().toISOString();
+const fmtDate=iso=>{const d=new Date(iso);return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;};
+const fmtDateTime=iso=>{const d=new Date(iso);return `${fmtDate(iso)} ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;};
+const escapeHTML=s=>(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+function load(){try{const r=localStorage.getItem(STORE_KEY);if(r)state=JSON.parse(r);}catch(e){console.error(e);}}
+function save(){localStorage.setItem(STORE_KEY,JSON.stringify(state));}
+
+function levenshtein(a,b){
+  const m=a.length,n=b.length;
+  if(!m)return n; if(!n)return m;
+  let prev=Array.from({length:n+1},(_,j)=>j);
+  let cur=new Array(n+1);
+  for(let i=1;i<=m;i++){
+    cur[0]=i;
+    for(let j=1;j<=n;j++){
+      const cost=a[i-1]===b[j-1]?0:1;
+      cur[j]=Math.min(prev[j]+1,cur[j-1]+1,prev[j-1]+cost);
+    }
+    [prev,cur]=[cur,prev];
+  }
+  return prev[n];
+}
+function similarity(a,b){
+  a=(a||'').trim().toLowerCase(); b=(b||'').trim().toLowerCase();
+  if(!a||!b)return 0;
+  if(a===b)return 1;
+  if(a.includes(b)||b.includes(a))return 0.85;
+  const L=levenshtein(a,b);
+  const maxLen=Math.max(a.length,b.length);
+  return 1-L/maxLen;
+}
+function findSimilar(name,threshold=0.6){
+  let best=null,bestScore=0;
+  for(const g of state.grudges){
+    const s=similarity(name,g.name);
+    if(s>bestScore){bestScore=s;best=g;}
+  }
+  return bestScore>=threshold?{grudge:best,score:bestScore}:null;
+}
+
+function recordGrudge(){
+  const name=$('#nameInput').value.trim();
+  const note=$('#noteInput').value.trim();
+  const category=$('#catInput').value.trim()||'未分类';
+  const sliderVal=parseInt($('#hatredSlider').value,10);
+  if(!name){toast('先填上那个让你记仇的名字');return;}
+  const sim=findSimilar(name);
+  if(sim){
+    const g=sim.grudge;
+    const wasTrash=g.inTrash;
+    g.inTrash=false; g.trashedAt=null;
+    g.hatred=Math.min(100,g.hatred+10);
+    g.records.push({date:nowISO(),note:note||'(无备注)',delta:10,category});
+    g.lastRecorded=nowISO();
+    g.category=category;
+    save(); render();
+    if(g.hatred>=100){showMaxModal(g.name);}
+    else if(wasTrash){toast(`「${g.name}」已从『人淡如菊』拉回，继续清算！仇恨+10（现 ${g.hatred}）`);}
+    else{toast(`已给「${g.name}」追加仇恨 +10（现 ${g.hatred}）`);}
+    resetForm();
+  }else{
+    const h=Math.max(1,Math.min(100,sliderVal||1));
+    const g={
+      id:uid(),name,hatred:h,base:h,
+      records:[{date:nowISO(),note:note||'(无备注)',delta:h,category}],
+      category,createdAt:nowISO(),lastRecorded:nowISO(),inTrash:false,trashedAt:null
+    };
+    state.grudges.push(g);
+    save(); render();
+    if(h>=100){showMaxModal(g.name);}
+    else{toast(`已将「${name}」记入仇簿，仇恨值 ${h}`);}
+    resetForm();
+  }
+}
+function add10FromCard(id){
+  const g=state.grudges.find(x=>x.id===id);
+  if(!g)return;
+  g.hatred=Math.min(100,g.hatred+10);
+  g.records.push({date:nowISO(),note:'(追加仇恨)',delta:10,category:g.category});
+  g.lastRecorded=nowISO();
+  save(); render();
+  if(g.hatred>=100){showMaxModal(g.name);}
+  else{toast(`「${g.name}」仇恨+10（现 ${g.hatred}）`);}
+}
+function moveToTrash(id){
+  const g=state.grudges.find(x=>x.id===id);
+  if(!g)return;
+  g.inTrash=true; g.trashedAt=nowISO();
+  save(); render(); toast(`「${g.name}」已移入『人淡如菊』，愿你释然`);
+}
+function reviveFromTrash(id){
+  const g=state.grudges.find(x=>x.id===id);
+  if(!g)return;
+  g.inTrash=false; g.trashedAt=null;
+  g.hatred=Math.min(100,g.hatred+10);
+  g.records.push({date:nowISO(),note:'(从人淡如菊复活，仇恨+10)',delta:10,category:g.category});
+  g.lastRecorded=nowISO();
+  save(); render();
+  if(g.hatred>=100){showMaxModal(g.name);}
+  else{toast(`「${g.name}」复活，仇恨+10（现 ${g.hatred}）`);}
+}
+function deleteForever(id){
+  const g=state.grudges.find(x=>x.id===id);
+  state.grudges=state.grudges.filter(x=>x.id!==id);
+  save(); render();
+  toast(g?`「${g.name}」一笔勾销，彻底抹去`:'已删除');
+}
+
+function autoTrash(){
+  const now=Date.now();
+  let moved=0;
+  for(const g of state.grudges){
+    if(!g.inTrash){
+      const last=new Date(g.lastRecorded).getTime();
+      if(now-last>30*24*3600*1000){g.inTrash=true;g.trashedAt=nowISO();moved++;}
+    }
+  }
+  if(moved)save();
+  return moved;
+}
+
+function levelText(lvl){
+  return lvl>=100?'忍无可忍':lvl>=80?'不共戴天':lvl>=60?'怀恨在心':lvl>=40?'略有芥蒂':lvl>=20?'心存不快':'微仇';
+}
+
+function cardHTML(g){
+  const lvl=g.hatred;
+  const last=g.records[g.records.length-1];
+  return `<div class="card">
+    <div class="thermo">
+      <div class="thermo-tube"><div class="thermo-fill" style="height:${lvl}%"></div></div>
+      <div class="thermo-bulb">${lvl}</div>
+    </div>
+    <div class="info">
+      <div class="name">${escapeHTML(g.name)} <span class="lvl-badge ${lvl>=100?'max':''}">${levelText(lvl)}</span></div>
+      <div class="meta">记录 ${g.records.length} 次 · 最近 ${fmtDateTime(g.lastRecorded)} · 分类 <span class="badge">${escapeHTML(g.category)}</span></div>
+      <div class="note">「${escapeHTML(last.note)}」</div>
+      <div class="actions">
+        <button class="btn small add10" data-act="add10" data-id="${g.id}">再记一笔(+10)</button>
+        <button class="btn small ghost" data-act="trash" data-id="${g.id}">人淡如菊</button>
+      </div>
+    </div>
+  </div>`;
+}
+
+function renderFilters(){
+  const cats=['全部',...new Set(state.grudges.filter(g=>!g.inTrash).map(g=>g.category||'未分类'))];
+  $('#catList').innerHTML=cats.filter(c=>c!=='全部').map(c=>`<option value="${escapeHTML(c)}">`).join('');
+  $('#filters').innerHTML=cats.map(c=>`<span class="chip ${c===activeCategory?'active':''}" data-cat="${escapeHTML(c)}">${escapeHTML(c)}</span>`).join('');
+  $$('#filters .chip').forEach(ch=>ch.addEventListener('click',()=>{activeCategory=ch.dataset.cat;render();}));
+}
+function renderStat(){
+  const active=state.grudges.filter(g=>!g.inTrash);
+  const trash=state.grudges.filter(g=>g.inTrash);
+  const maxed=active.filter(g=>g.hatred>=100).length;
+  $('#statBar').innerHTML=
+    `<div class="s">在册仇人<b>${active.length}</b></div>`+
+    `<div class="s">已释然<b>${trash.length}</b></div>`+
+    `<div class="s">满级仇人<b>${maxed}</b></div>`+
+    `<div class="s">总记录<b>${state.grudges.reduce((s,g)=>s+g.records.length,0)}</b></div>`;
+}
+function renderList(){
+  const wrap=$('#grudgeList');
+  let list=state.grudges.filter(g=>!g.inTrash);
+  if(activeCategory&&activeCategory!=='全部')list=list.filter(g=>(g.category||'未分类')===activeCategory);
+  list.sort((a,b)=>new Date(b.lastRecorded)-new Date(a.lastRecorded));
+  if(!list.length){wrap.innerHTML=`<div class="empty">仇簿空空如也，愿你岁月静好。</div>`;return;}
+  const groups={};
+  list.forEach(g=>{
+    const k=viewMode==='date'?fmtDate(g.lastRecorded):(g.category||'未分类');
+    (groups[k]=groups[k]||[]).push(g);
+  });
+  const keys=Object.keys(groups);
+  if(viewMode==='date')keys.sort((a,b)=>a<b?1:-1);
+  let html='';
+  for(const k of keys){
+    html+=`<div class="group-title">${viewMode==='date'?('📅 '+k):('🏷️ '+escapeHTML(k))}</div>`;
+    html+=`<div class="cards">${groups[k].map(cardHTML).join('')}</div>`;
+  }
+  wrap.innerHTML=html;
+}
+function renderTrash(){
+  const wrap=$('#trashList');
+  const list=state.grudges.filter(g=>g.inTrash).sort((a,b)=>new Date(b.trashedAt)-new Date(a.trashedAt));
+  if(!list.length){wrap.innerHTML=`<div class="empty">『人淡如菊』空空如也，心中无挂碍。</div>`;return;}
+  wrap.innerHTML=list.map(g=>`<div class="trash-card">
+    <div class="thermo">
+      <div class="thermo-tube"><div class="thermo-fill" style="height:${g.hatred}%"></div></div>
+      <div class="thermo-bulb">${g.hatred}</div>
+    </div>
+    <div>
+      <div class="tname">${escapeHTML(g.name)}</div>
+      <div class="tmeta">沉入时间 ${fmtDateTime(g.trashedAt)} · 曾记 ${g.records.length} 次 · 分类 ${escapeHTML(g.category)}</div>
+    </div>
+    <div class="tactions">
+      <button class="btn small gold" data-act="revive" data-id="${g.id}">拉回清算</button>
+      <button class="btn small red" data-act="del" data-id="${g.id}">彻底删除</button>
+    </div>
+  </div>`).join('');
+}
+function render(){
+  renderStat();renderFilters();renderList();renderTrash();
+}
+
+/* 线上复仇 */
+function genRevenge(){
+  const name=$('#revName').value.trim();
+  if(!name){toast('先告诉我要整谁');return;}
+  const openings=[
+    `据本簿秘报，${name}今日运势崩盘：`,
+    `天道好轮回，${name}今日惨遭报应：`,
+    `复仇剧本加载中……${name}的噩梦开始了：`,
+    `因果循环，${name}今日子时犯冲：`
+  ];
+  const misfortunes=[
+    '出门左脚先迈，一脚踩进小区刚拉的狗屎，臭味萦绕一整天。',
+    '刚取的一百块现金从口袋滑落，随风飘进下水道，再也捞不回。',
+    '出门忘带伞，偏偏暴雨倾盆，淋成落汤鸡还摔了一跤。',
+    '手机一个手滑掉进马桶，捞出时已自动关机，聊天记录全没。',
+    '外卖到了发现是别人点的，自己的那份被骑手送错三公里。',
+    '到公司发现考勤机坏了，偏偏今天全员打卡，全勤奖没了。',
+    '想喝的奶茶售罄，排队半小时只买到一杯去冰无糖的。',
+    '鞋带散了弯腰系，结果头撞门框，眼前一黑。',
+    '闹钟没响睡过头，赶到时会议已经散场，被领导点名。',
+    '刚洗好的白衬衫被旁边人泼了咖啡，还是冰美式。',
+    '想发的朋友圈忘选分组，发给全员后秒删，尴尬封神。',
+    '抽中的一等奖因为没看细则被取消，奖金拱手让人。',
+    '骑共享单车扫码显示已借出，回头发现车被自己推走了。',
+    '相亲对象迟到了一小时，见面第一句问你房贷还剩多少。'
+  ];
+  const count=2+Math.floor(Math.random()*2);
+  const picked=[...misfortunes].sort(()=>Math.random()-0.5).slice(0,count);
+  const story=openings[Math.floor(Math.random()*openings.length)]+'\n'+picked.join('\n');
+  const endings=['\n——善有善报，仇有仇报。','\n——记仇本，替你出气。','\n——因果循环，且看下回。','\n——今日宜解气，忌心软。'];
+  $('#revResult').textContent=story+endings[Math.floor(Math.random()*endings.length)];
+  $('#revResult').classList.add('show');
+}
+
+/* toast & modal */
+let toastTimer;
+function toast(msg){
+  const t=$('#toast'); t.textContent=msg; t.classList.add('show');
+  clearTimeout(toastTimer); toastTimer=setTimeout(()=>t.classList.remove('show'),2600);
+}
+function showMaxModal(name){
+  $('#maxText').textContent=`「${name}」的仇恨值已拉满 100。\n此仇不共戴天，记仇本已为你封印。`;
+  $('#maxModal').classList.add('show');
+}
+
+/* init */
+function resetForm(){
+  $('#nameInput').value=''; $('#noteInput').value=''; $('#catInput').value='';
+  $('#similarBanner').style.display='none';
+  $('#hatredSlider').value=30; $('#sliderVal').textContent='30';
+  $('#previewFill').style.height='30%'; $('#previewBulb').textContent='30';
+}
+function init(){
+  load();
+  const moved=autoTrash();
+  // events
+  $('#recordBtn').addEventListener('click',recordGrudge);
+  $('#revBtn').addEventListener('click',genRevenge);
+  $('#nameInput').addEventListener('input',()=>{
+    const v=$('#nameInput').value.trim();
+    const banner=$('#similarBanner');
+    if(!v){banner.style.display='none';return;}
+    const sim=findSimilar(v);
+    if(sim){
+      const g=sim.grudge;
+      banner.style.display='block';
+      banner.innerHTML=g.inTrash
+        ?`⚠️ 你曾记过「<b>${escapeHTML(g.name)}</b>」的仇，TA 已沉入『人淡如菊』（仇恨 ${g.hatred}）。再记一笔就把它拉回来继续清算。`
+        :`⚠️ 你之前记过「<b>${escapeHTML(g.name)}</b>」的仇！当前仇恨值 <b>${g.hatred}</b>。再记一笔将自动 +10。`;
+    }else{banner.style.display='none';}
+  });
+  $('#hatredSlider').addEventListener('input',()=>{
+    const v=$('#hatredSlider').value;
+    $('#sliderVal').textContent=v; $('#previewFill').style.height=v+'%'; $('#previewBulb').textContent=v;
+  });
+  $('#viewDate').addEventListener('click',()=>{viewMode='date';$('#viewDate').classList.add('active');$('#viewCat').classList.remove('active');renderList();});
+  $('#viewCat').addEventListener('click',()=>{viewMode='category';$('#viewCat').classList.add('active');$('#viewDate').classList.remove('active');renderList();});
+  $$('.nav-btn').forEach(b=>b.addEventListener('click',()=>{
+    $$('.nav-btn').forEach(x=>x.classList.remove('active'));
+    b.classList.add('active');
+    const tab=b.dataset.tab;
+    $$('.section').forEach(s=>s.classList.toggle('active',s.dataset.tab===tab));
+  }));
+  document.addEventListener('click',e=>{
+    const t=e.target.closest('[data-act]');
+    if(!t)return;
+    const act=t.dataset.act,id=t.dataset.id;
+    if(act==='add10')add10FromCard(id);
+    else if(act==='trash')moveToTrash(id);
+    else if(act==='revive')reviveFromTrash(id);
+    else if(act==='del')deleteForever(id);
+  });
+  $('#maxClose').addEventListener('click',()=>$('#maxModal').classList.remove('show'));
+  $('#maxModal').addEventListener('click',e=>{if(e.target.id==='maxModal')$('#maxModal').classList.remove('show');});
+  render();
+  if(moved)toast(`静默一月，${moved} 笔旧怨已沉入『人淡如菊』`);
+}
+init();
+</script>
+</body>
+</html>
